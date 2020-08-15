@@ -1,0 +1,36 @@
+version: "2"
+services:
+  db:
+    image: mysql:5.7
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: $DB_PASSWD
+
+  nginx:
+    image: nginx
+    volumes:
+      - nginx:/conf
+
+  microblog:
+    depends_on:
+      - db
+      - nginx
+    image: andriibondar/microblog
+    volumes:
+      - theme_data:/var/www/html/themes
+    ports:
+      - "80:80"
+    restart: always
+    environment:
+      DB_SERVER: db
+      DB_PASSWD: $DB_PASSWD
+      PS_INSTALL_AUTO: 1
+      PS_DOMAIN: epamdevopsd.ddns.net
+      PS_ERASE_DB: 1
+
+volumes:
+  db_data: {}
+  microblog: {}
+  nginx: {}
