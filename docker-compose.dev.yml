@@ -21,7 +21,7 @@ services:
     volumes:
       - theme_data:/var/www/html/themes
     ports:
-      - "80:80"
+      - "8000:5000"
     restart: always
     environment:
       DB_SERVER: db

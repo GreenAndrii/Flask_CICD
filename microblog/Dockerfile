@@ -1,9 +1,23 @@
-FROM python:3.6
+FROM python:3.6-alpine
 
-COPY . ~/microblog
+RUN adduser -D microblog
 
-RUN apt-get update && apt-get upgrade -y \
-	&& pip3 install -r ~/microblog/requirements.txt \
-	&& pip3 install gunicorn pymysql \
-	&& rm -rf /var/lib/apt/lists/*
+WORKDIR /home/microblog
 
+COPY requirements.txt requirements.txt
+RUN python -m venv venv \
+	&& venv/bin/pip install -r requirements.txt \
+	&& venv/bin/pip install gunicorn
+
+COPY app app
+COPY migrations migrations
+COPY microblog.py config.py ../scripts/boot.sh ./
+RUN chmod +x boot.sh
+
+ENV FLASK_APP microblog.py
+
+RUN chown -R microblog:microblog ./
+USER microblog
+
+EXPOSE 5000
+ENTRYPOINT ["./boot.sh"]
