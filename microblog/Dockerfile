@@ -6,12 +6,13 @@ WORKDIR /home/microblog
 
 COPY requirements.txt requirements.txt
 RUN python -m venv venv \
+	&& pip install --upgrade pip \
 	&& venv/bin/pip install -r requirements.txt \
-	&& venv/bin/pip install gunicorn
+	&& venv/bin/pip install gunicorn pymysql
 
 COPY app app
 COPY migrations migrations
-COPY microblog.py config.py ../scripts/boot.sh ./
+COPY microblog.py config.py boot.sh ./
 RUN chmod +x boot.sh
 
 ENV FLASK_APP microblog.py
