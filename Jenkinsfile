@@ -39,4 +39,5 @@ pipeline {
         telegramSend "FAILURE: $JOB_NAME - Build # $BUILD_NUMBER"
       }
     }
+  }
 }
