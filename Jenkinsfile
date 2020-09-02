@@ -7,7 +7,7 @@ pipeline {
       timestamps()
     }
     stages {
-        stage('Create infrastructure') {
+        stage('Create infrastructure by Terraform') {
             steps {
               sh 'cd terraform && terraform init && terraform apply -input=false -auto-approve && cd -'
             }
@@ -15,7 +15,7 @@ pipeline {
 
 				stage('Install environment by Ansible') {
             steps {
-              sh 'cd ansible && ansible-playbook playbook_apache.yml &&	cd -'
+              sh 'cd ansible && ansible-playbook playbook_flask.yml &&	cd -'
             }
 				}
 
