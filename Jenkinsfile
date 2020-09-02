@@ -7,31 +7,26 @@ pipeline {
       timestamps()
     }
     stages {
+/*
 			  stage('Launch main.yml with terraform module') {
 					steps {
 						sh 'ansible-playbook main.yml'
 					}
 				}
-/* 
+*/ 
 				stage('Create infrastructure by Terraform') {
             steps {
               sh 'cd terraform && terraform init && terraform apply -input=false -auto-approve && cd -'
             }
         }
 
-				stage('Install environment by Ansible') {
+				/*stage('Install environment by Ansible') {
             steps {
               sh 'cd ansible && ansible-playbook playbook_flask.yml &&	cd -'
             }
-				}
+				}*/
 
-				 stage('Send message by Telegram') {
-            steps {              
-              telegramSend "SUCCESS: $JOB_NAME - Build # $BUILD_NUMBER"
-            } 
-*/
-				}		
-
+				
 		post {
 
 			success {

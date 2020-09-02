@@ -1,5 +1,5 @@
-http:
+flask:
   hosts:
-    ec2-13-57-34-111.us-west-1.compute.amazonaws.com:
+    flask-dev.green.dns-cloud.net:
   vars:
     ansible_ssh_user: ubuntu
