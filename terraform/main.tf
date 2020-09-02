@@ -23,7 +23,7 @@ module "ec2" {
   key_name      = "devops-eu-central-1"
   subnet_id     = tolist(data.aws_subnet_ids.all.ids)[0]
 
-  user-data = "curl https://ipv4.cloudns.net/api/dynamicURL/?q=MjkwMTQ1MDoyMDk4MTc1NzQ6MTE1ZDg4NDVlYTYzYTU4NmU4NzI5MDMxMjBiNmU5NjU1ZGY1YmI5ZDA5NGQ1OTM5NTA3NjZiN2FlMjlkNWRlOA"
+  user_data = "curl https://ipv4.cloudns.net/api/dynamicURL/?q=MjkwMTQ1MDoyMDk4MTc1NzQ6MTE1ZDg4NDVlYTYzYTU4NmU4NzI5MDMxMjBiNmU5NjU1ZGY1YmI5ZDA5NGQ1OTM5NTA3NjZiN2FlMjlkNWRlOA"
 
 
   tags = {
