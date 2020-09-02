@@ -2,6 +2,7 @@
 - hosts: localhost
 
   tasks:
-    terraform:
-      project_path: terraform/
-      state: present
+    - name: launch terraform
+      terraform:
+        project_path: terraform/
+        state: present

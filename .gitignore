@@ -38,6 +38,9 @@ nosetests.xml
 venv
 app.db
 microblog.log*
-.vscode
+/.vscode
 .
 .terraform
+*.tfstate.*
+terraform/terraform.tfstate
+terraform/terraform.tfstate.backup
