@@ -27,13 +27,13 @@ pipeline {
               sh 'cd ansible && ansible-playbook playbook_flask.yml &&	cd -'
             }
         }
-*/
+
 				stage('Run unit tests') {
 					  steps {
 
 						}
 				}
-
+*/
         stage('Destroy infrastructure by Terraform') {
             steps {
 							withCredentials([[
