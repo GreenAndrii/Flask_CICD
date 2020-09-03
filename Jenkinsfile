@@ -6,22 +6,27 @@ pipeline {
     options {
       timestamps()
     }
+		withCredentials([
+                        [
+                                $class           : 'AmazonWebServicesCredentialsBinding',
+                                credentialsId    : 'AWS_ACCOUNT_ID_DEV',
+                                accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                                secretKeyVariable: 'AWS_SECRET_ACCESS_KEY',
+                        ]]) {
     stages {
-/*      
-        stage('Launch main.yml with terraform module') {
+/*     
+        stage('Add credentials to environment') {
           steps {
-            sh 'ansible-playbook main.yml'
+            sh 'export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID_DEV && export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY_DEV'
           }
         }
 */ 
         stage('Create infrastructure by Terraform') {
-          withCredentials([usernamePassword(credentialsId: 'aws-key', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
-    
-
             steps {
-              sh 'cd terraform && terraform init && terraform apply -input=false -auto-approve && cd -'
+              sh '
+							cd terraform && terraform init && terraform apply -input=false -auto-approve && cd -'
             }
-          }
+          
         }
 /*
         stage('Install environment by Ansible') {
@@ -35,7 +40,8 @@ pipeline {
               telegramSend "SUCCESS: $JOB_NAME - Build # $BUILD_NUMBER"
             } 
 */
-        }		
+		}
+			  }		
 
     post {
 
