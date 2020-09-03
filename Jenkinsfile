@@ -23,8 +23,7 @@ pipeline {
 */ 
         stage('Create infrastructure by Terraform') {
             steps {
-              sh '
-							cd terraform && terraform init && terraform apply -input=false -auto-approve && cd -'
+              sh 'cd terraform && terraform init && terraform apply -input=false -auto-approve && cd -'
             }
           
         }
