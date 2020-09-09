@@ -15,8 +15,6 @@ pipeline {
 
         stage('Create infrastructure by Terraform') {
             steps {
-              access = env.AWS_ACCESS_KEY_ID
-              sh 'echo ${access}'
               sh 'cd terraform/dev && terraform init && terraform apply -input=false -auto-approve && cd -'
           }
         }
