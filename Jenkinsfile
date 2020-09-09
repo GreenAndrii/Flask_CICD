@@ -15,16 +15,18 @@ pipeline {
 
         stage('Create infrastructure by Terraform') {
             steps {
+              access = env.AWS_ACCESS_KEY_ID
+              sh 'echo ${access}'
               sh 'cd terraform/dev && terraform init && terraform apply -input=false -auto-approve && cd -'
           }
         }
-/*
+
         stage('Setup environment by Ansible') {
             steps {
               sh 'cd ansible && ansible-playbook playbook_flask.yml &&	cd -'
             }
         }
-
+/*
         stage('Run unit tests') {
             steps {
 
@@ -49,10 +51,11 @@ pipeline {
       failure {
         telegramSend "FAILURE: $JOB_NAME - Build # $BUILD_NUMBER"
       }
-
+/*
       always {
-        cleanWs()
         sh 'cd terraform/dev && terraform destroy -auto-approve && cd -'
+        cleanWs()
       }
+*/
     }
 }
