@@ -76,7 +76,7 @@
         tag: latest
         build:
           dockerfile: Dockerfile
-          path: ~/microblog/
+          path: /home/ubuntu/microblog/
         state: present
         pull: no
         source: build
