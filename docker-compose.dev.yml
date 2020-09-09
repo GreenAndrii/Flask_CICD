@@ -1,9 +1,8 @@
 version: "2"
 services:
-  db:
+  dbserver:
     image: mysql:5.7
-    volumes:
-      - db_data:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password
     restart: always
     environment:
       MYSQL_RANDOM_ROOT_PASSWORD: yes
@@ -13,26 +12,22 @@ services:
 
   microblog:
     depends_on:
-      - db
-    image: andriibondar/microblog
-    volumes:
-      - microbolog:/home/microblog
+      - dbserver
+    image: microblog
     ports:
       - "80:5000"
     restart: always
-    healthcheck:
-      test: ["CMD", "ping", "-c 3 localhost"]
-      interval: 3s
-      timeout: 5s
-      retries: 5
-      start_period: 1s
+    # healthcheck:
+    #   test: ["CMD", "ping", "-c 3 localhost"]
+    #   interval: 3s
+    #   timeout: 5s
+    #   retries: 5
+    #   start_period: 1s
     environment:
-      DB_SERVER: db
-      DB_PASSWD: $DB_PASSWORD
-      PS_INSTALL_AUTO: 1
-      PS_DOMAIN: epamdevopsd.ddns.net
-      PS_ERASE_DB: 1
-
-volumes:
-  db_data: {}
-  microblog: {}
+      SECRET_KEY: $MY_SECRET_KEY
+      MAIL_SERVER: smtp.googlemail.com
+      MAIL_PORT: 587
+      MAIL_USE_TLS: true
+      MAIL_USERNAME: $MY_GMAIL_USER
+      MAIL_PASSWORD: $MY_GMAIL_PASSWORD
+      DATABASE_URL: mysql+pymysql://$DB_USER:$DB_PASSWORD@dbserver/$DB_DATABASE

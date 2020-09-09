@@ -1,0 +1,95 @@
+---
+- name: Setup flask environment with docker
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Update repo
+      apt:
+        name: aptitude
+        state: latest
+        update_cache: yes
+        force_apt_get: yes
+
+    - name: Install required system packages
+      apt: name={{ item }} state=latest update_cache=yes
+      loop:
+        [
+          "apt-transport-https",
+          "ca-certificates",
+          "curl",
+          "software-properties-common",
+          "python3-pip",
+          "virtualenv",
+          "python3-setuptools",
+        ]
+        # "python-dev",
+        # "libffi-dev",
+        # "openssl-dev",
+        # "py-pip",
+        # "gcc",
+        # "libc-dev",
+        # "make",
+
+    - name: Add Docker GPG apt Key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker Repository
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu bionic stable
+        state: present
+
+    - name: Update apt and install docker-ce
+      apt: update_cache=yes name=docker-ce state=latest
+
+    - name: Install Docker Module for Python
+      pip:
+        name: docker
+
+    - name: Install docker-compose
+      shell: |
+        curl -L "https://github.com/docker/compose/releases/download/1.26.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+        chmod +x /usr/local/bin/docker-compose
+
+    - name: Copy application to host
+      copy:
+        src: ../microblog
+        dest: /home/ubuntu/
+        owner: ubuntu
+        group: ubuntu
+
+    # - name: Copy application to host
+    #   synchronize:
+    #     src: /home/green/Projects/Flask_CICD/microblog
+    #     dest: /home/ubuntu/microblog
+    #     dirs: yes
+    #     mode: pull
+    #     recursive: yes
+    #     rsync_opts:
+    #       - "--exclude=venv"
+
+    - name: Build Flask image from Dockerfile
+      docker_image:
+        name: microblog
+        tag: latest
+        build:
+          dockerfile: Dockerfile
+          path: ~/microblog/
+        state: present
+        pull: no
+        source: build
+
+    # - name: Create default container
+    #   docker_container:
+    #     name: "microblog"
+    #     image: "microblog"
+    #     state: started
+    #     restart_policy: always
+    #     ports:
+    #       - "80:5000"
+    #   with_sequence: count=1
+
+    # - name: Create image with flask
+    #   docker_compose:

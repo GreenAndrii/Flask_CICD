@@ -2,52 +2,44 @@
 properties([disableConcurrentBuilds()])
 
 pipeline {
-    agent any 
+    agent any
     options {
       timestamps()
     }
-		
+    environment {
+        AWS_ACCESS_KEY_ID     = credentials('jenkins-aws-secret-key-id')
+        AWS_SECRET_ACCESS_KEY = credentials('jenkins-aws-secret-access-key')
+				
+    }
+    
     stages {
-
+/*
         stage('Create infrastructure by Terraform') {
             steps {
-							withCredentials([[
-                                $class           : 'AmazonWebServicesCredentialsBinding',
-                                credentialsId    : 'AWS_ACCOUNT_ID_DEV',
-                                accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-                                secretKeyVariable: 'AWS_SECRET_ACCESS_KEY',
-                        ]]) {
-              sh 'cd terraform && terraform init && terraform apply -input=false -auto-approve && cd -'
-            }
-					}
-				}
-/*
-        stage('Install environment by Ansible') {
+              sh 'cd terraform/dev && terraform init && terraform apply -input=false -auto-approve && cd -'
+          }
+        }
+
+        stage('Setup environment by Ansible') {
             steps {
               sh 'cd ansible && ansible-playbook playbook_flask.yml &&	cd -'
             }
         }
 
-				stage('Run unit tests') {
-					  steps {
+        stage('Run unit tests') {
+            steps {
 
-						}
-				}
-*/
+            }
+        }
+
         stage('Destroy infrastructure by Terraform') {
             steps {
-							withCredentials([[
-                                $class           : 'AmazonWebServicesCredentialsBinding',
-                                credentialsId    : 'AWS_ACCOUNT_ID_DEV',
-                                accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-                                secretKeyVariable: 'AWS_SECRET_ACCESS_KEY',
-                        ]]) {
               sh 'cd terraform && terraform destroy -auto-approve && cd -'
             }
-					}
         }
-		}
-		  		
+*/
+    }
+          
 
     post {
 
@@ -56,17 +48,12 @@ pipeline {
       }
 
       failure {
-				script{
         telegramSend "FAILURE: $JOB_NAME - Build # $BUILD_NUMBER"
-				withCredentials([[
-                                $class           : 'AmazonWebServicesCredentialsBinding',
-                                credentialsId    : 'AWS_ACCOUNT_ID_DEV',
-                                accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-                                secretKeyVariable: 'AWS_SECRET_ACCESS_KEY',
-                        ]]) {
-              sh 'cd terraform && terraform destroy -auto-approve && cd -'
-            }
-				}
+      }
+
+      always {
+        cleanWs()
+				sh 'cd terraform/dev && terraform destroy -auto-approve && cd -'
       }
     }
 }
