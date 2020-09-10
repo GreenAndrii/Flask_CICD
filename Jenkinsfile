@@ -31,9 +31,9 @@ pipeline {
             }
         }
 
-        stage('Destroy infrastructure by Terraform') {
+        stage('Destroy infrastructure to production') {
             steps {
-              sh 'cd terraform && terraform destroy -auto-approve && cd -'
+              
             }
         }
 */
