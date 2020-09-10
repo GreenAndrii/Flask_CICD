@@ -1,5 +1,6 @@
 #!groovy
 properties([disableConcurrentBuilds()])
+def FAILED_STAGE
 
 pipeline {
     agent any
@@ -15,30 +16,42 @@ pipeline {
 
         stage('Create infrastructure by Terraform') {
             steps {
-              sh 'cd terraform/dev && terraform init && terraform apply -input=false -auto-approve && cd -'
-          }
+							script {
+							  FAILED_STAGE=env.STAGE_NAME
+                sh 'cd terraform/dev && terraform init && terraform apply -input=false -auto-approve && cd -'
+              }
+						}
         }
 
         stage('Setup environment by Ansible') {
             steps {
-              sh 'cd ansible && ansible-playbook playbook_flask.yml &&	cd -'
-            }
+							script {
+							  FAILED_STAGE=env.STAGE_NAME
+                sh 'cd ansible && ansible-playbook playbook_flask.yml &&	cd -'
+              }
+						}
         }
 /*
         stage('Run unit tests') {
             steps {
+							script {
+								FAILED_STAGE=env.STAGE_NAME
 
+
+		          }
             }
         }
 
-        stage('Destroy infrastructure to production') {
+        stage('Deploy infrastructure to production') {
             steps {
-              
+							script {
+								FAILED_STAGE=env.STAGE_NAME
+
+						  }
             }
         }
 */
-    }
-          
+    }        
 
     post {
 
@@ -47,7 +60,7 @@ pipeline {
       }
 
       failure {
-        telegramSend "FAILURE: $JOB_NAME - Build # $BUILD_NUMBER"
+        telegramSend "FAILURE: $JOB_NAME - Build # $BUILD_NUMBER Stage ${FAILED_STAGE}"
       }
 /*
       always {
