@@ -45,3 +45,4 @@ microblog.log*
 # terraform/**/terraform.tfstate
 # terraform/terraform.tfstate.backup
 microblog_old
+ansible/hosts

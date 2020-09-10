@@ -19,6 +19,7 @@ pipeline {
 							script {
 							  FAILED_STAGE=env.STAGE_NAME
                 sh 'cd terraform/dev && terraform init && terraform apply -input=false -auto-approve && cd -'
+								sh 'sleep 30'
               }
 						}
         }
@@ -60,7 +61,7 @@ pipeline {
       }
 
       failure {
-        telegramSend "FAILURE: $JOB_NAME - Build # $BUILD_NUMBER Stage ${FAILED_STAGE}"
+        telegramSend "FAILURE: $JOB_NAME - Build # $BUILD_NUMBER Stage: ${FAILED_STAGE}"
       }
 /*
       always {

@@ -46,14 +46,16 @@
 
     - name: Install Docker Module for Python
       pip:
-        name: docker
+        name:
+          - docker
+          - docker-compose
 
     - name: Install docker-compose
       shell: |
         curl -L "https://github.com/docker/compose/releases/download/1.26.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
         chmod +x /usr/local/bin/docker-compose
 
-    - name: Copy application to host
+    - name: Copy application to remote host
       copy:
         src: ../microblog
         dest: /home/ubuntu/
@@ -77,8 +79,8 @@
         build:
           dockerfile: Dockerfile
           path: /home/ubuntu/microblog/
+          pull: no
         state: present
-        pull: no
         source: build
 
     # - name: Create default container
@@ -91,5 +93,13 @@
     #       - "80:5000"
     #   with_sequence: count=1
 
-    # - name: Create image with flask
-    #   docker_compose:
+    - name: Tear down existing services
+      docker_compose:
+        project_src: /home/ubuntu/microblog/
+        state: absent
+
+    - name: Start application with flask docker image
+      docker_compose:
+        project_name: microblog
+        project_src: /home/ubuntu/microblog/
+      register: output
