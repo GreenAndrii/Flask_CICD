@@ -27,7 +27,7 @@ pipeline {
             steps {
 							script {
 							  FAILED_STAGE=env.STAGE_NAME
-                sh 'cd ansible && ansible-playbook playbook_flask.yml &&	cd -'
+                sh 'cd ansible && ansible-playbook --timeout 30 playbook_flask.yml &&	cd -'
               }
 						}
         }
