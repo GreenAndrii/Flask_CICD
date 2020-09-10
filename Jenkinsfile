@@ -32,17 +32,18 @@ pipeline {
               }
 						}
         }
-/*
+
         stage('Run unit tests') {
             steps {
 							script {
 								FAILED_STAGE=env.STAGE_NAME
+								sh 'cd microblog/pytest && python test_backend.py && cd -'
 
 
 		          }
             }
         }
-
+/*
         stage('Deploy infrastructure to production') {
             steps {
 							script {
