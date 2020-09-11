@@ -70,6 +70,9 @@
         dest: /usr/local/bin/docker-compose
         mode: '0755'
     
+    - name: Print url
+      debug: 
+        msg: https://github.com/docker/compose/releases/download/1.26.2/docker-compose-{{ uname_s.stdout }}-{{ uname_m.stdout }}
     # - name: Install docker-compose(old version)
     #   shell: |
     #     curl -L "https://github.com/docker/compose/releases/download/1.26.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
