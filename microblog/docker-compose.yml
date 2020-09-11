@@ -7,7 +7,7 @@ services:
     environment:
       MYSQL_RANDOM_ROOT_PASSWORD: "yes"
       MYSQL_USER: microblog # $DB_USER
-      MYSQL_PASSWORD: 123456 # $DB_PASSWORD
+      MYSQL_PASSWORD: $DB_PASSWORD
       MYSQL_DATABASE: microblog #$DB_DATABASE
 
   microblog:

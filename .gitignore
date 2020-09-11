@@ -46,3 +46,4 @@ microblog.log*
 # terraform/terraform.tfstate.backup
 microblog_old
 ansible/hosts
+FLASK_CICD.xmind

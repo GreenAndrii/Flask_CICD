@@ -2,8 +2,14 @@
 - name: Setup flask environment with docker
   hosts: all
   become: true
+  environment:
+    RANDOM_DB_PASSWD:
 
   tasks:
+    - name: Generate DB password
+      set_fact:
+        RANDOM_DB_PASSWD: "{{ lookup('password', '/dev/null length=15 chars=ascii_letters') }}"
+
     - name: Update repo
       apt:
         name: aptitude
@@ -97,6 +103,11 @@
       docker_compose:
         project_src: /home/ubuntu/microblog/
         state: absent
+
+    - name: Set DB_PASSWORD
+      lineinfile: dest=/etc/environment state=present regexp='^DB_PASSWORD' >
+          line='DB_PASSWORD={{ RANDOM_DB_PASSWD }}'
+
 
     - name: Start application with flask docker image
       docker_compose:

@@ -32,7 +32,7 @@ pipeline {
               }
 						}
         }
-
+/*
         stage('Run unit tests') {
             steps {
 							script {
@@ -43,7 +43,7 @@ pipeline {
 		          }
             }
         }
-/*
+
         stage('Deploy infrastructure to production') {
             steps {
 							script {
