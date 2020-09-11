@@ -32,5 +32,5 @@ services:
       MAIL_USE_TLS: "true"
       MAIL_USERNAME: $MY_GMAIL_USER
       MAIL_PASSWORD: $MY_GMAIL_PASSWORD
-      DATABASE_URL: mysql+pymysql://microblog:123456@db/microblog
+      DATABASE_URL: mysql+pymysql://microblog:$DB_PASSWORD@db/microblog
       # DATABASE_URL: mysql+pymysql://$DB_USER:$DB_PASSWORD@db/$DB_DATABASE
