@@ -10,6 +10,9 @@
       set_fact:
         RANDOM_DB_PASSWD: "{{ lookup('password', '/dev/null length=15 chars=ascii_letters') }}"
 
+    - name: echo random pass
+      shell: echo {{ RANDOM_DB_PASSWD }}
+      
     - name: Update repo
       apt:
         name: aptitude
@@ -56,17 +59,31 @@
           - docker
           - docker-compose
 
-    - name: Install docker-compose
-      shell: |
-        curl -L "https://github.com/docker/compose/releases/download/1.26.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-        chmod +x /usr/local/bin/docker-compose
+    - name: Get uname -s
+      shell: uname -s
+      register: uname_s
 
-    - name: Copy application to remote host
-      copy:
-        src: ../microblog
-        dest: /home/ubuntu/
-        owner: ubuntu
-        group: ubuntu
+    - name: Get uname -m
+      shell: uname -m
+      register: uname_m
+    
+    - name: Install docker-compose
+      get_url: 
+        url: https://github.com/docker/compose/releases/download/1.26.2/docker-compose-{{ uname_s.stdout }}-{{ uname_m.stdout }}
+        dest: /usr/local/bin/docker-compose
+        mode: '0755'
+    
+    # - name: Install docker-compose(old version)
+    #   shell: |
+    #     curl -L "https://github.com/docker/compose/releases/download/1.26.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+    #     chmod +x /usr/local/bin/docker-compose
+
+    # - name: Copy application to remote host
+    #   copy:
+    #     src: ../microblog
+    #     dest: /home/ubuntu/
+    #     owner: ubuntu
+    #     group: ubuntu
 
     # - name: Copy application to host
     #   synchronize:
@@ -104,12 +121,16 @@
         project_src: /home/ubuntu/microblog/
         state: absent
     
+    
     - name: Set DB_PASSWORD
-      lineinfile: dest=/etc/environment state=present regexp='^DB_PASSWORD' >
-          line='DB_PASSWORD={{ RANDOM_DB_PASSWD }}'
+      lineinfile: 
+        path: /etc/environment 
+        state: present 
+        regexp: '^DB_PASSWORD' 
+        line: 'DB_PASSWORD={{ RANDOM_DB_PASSWD }}'
 
 
-    - name: Start application with flask docker image
+    - name: Start application from flask docker image
       docker_compose:
         project_name: microblog
         project_src: /home/ubuntu/microblog/
