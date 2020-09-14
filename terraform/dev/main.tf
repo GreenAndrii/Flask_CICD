@@ -48,6 +48,26 @@ module "ec2" {
   }
 }
 
+module "flask_security_group"{
+	source = "terraform-aws-modules/security-group/aws"
+
+	name = "flask_aws_sg"
+	description = "AWS security group for microblog Flask project"
+	vpc_id = data.aws_vpc.default.id
+
+
+}
+
+module "http_sg" {
+  source = "../../modules/http-80"
+
+  name        = "http-sg"
+  description = "Security group with HTTP ports open for everybody (IPv4 CIDR), egress ports are all world open"
+  vpc_id      = data.aws_vpc.default.id
+
+  ingress_cidr_blocks = ["0.0.0.0/0"]
+}
+
 # generate Ansible hosts file
 resource "local_file" "hosts" {
   content = templatefile("${path.module}/templates/hosts.tpl",

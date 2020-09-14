@@ -56,42 +56,12 @@
           - docker
           - docker-compose
 
-    # - name: Get uname -s
-    #   shell: uname -s
-    #   register: uname_s
-
-    # - name: Get uname -m
-    #   shell: uname -m
-    #   register: uname_m
-    
-    # - name: Install docker-compose
-    #   get_url: 
-    #     url: https://github.com/docker/compose/releases/download/1.26.2/docker-compose-{{ uname_s.stdout }}-{{ uname_m.stdout }}
-    #     dest: /usr/local/bin/docker-compose
-    #     mode: '0755'
-    
-
-    # - name: Install docker-compose(old version)
-    #   shell: |
-    #     curl -L "https://github.com/docker/compose/releases/download/1.26.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-    #     chmod +x /usr/local/bin/docker-compose
-
     - name: Copy application to remote host
       copy:
         src: ../microblog
         dest: /home/ubuntu/
         owner: ubuntu
         group: ubuntu
-
-    # - name: Copy application to host
-    #   synchronize:
-    #     src: /home/green/Projects/Flask_CICD/microblog
-    #     dest: /home/ubuntu/microblog
-    #     dirs: yes
-    #     mode: pull
-    #     recursive: yes
-    #     rsync_opts:
-    #       - "--exclude=venv"
 
     - name: Build Flask image from Dockerfile
       docker_image:
@@ -103,16 +73,6 @@
           pull: no
         state: present
         source: build
-
-    # - name: Create default container
-    #   docker_container:
-    #     name: "microblog"
-    #     image: "microblog"
-    #     state: started
-    #     restart_policy: always
-    #     ports:
-    #       - "80:5000"
-    #   with_sequence: count=1
 
     - name: Tear down existing services
       docker_compose:
@@ -132,4 +92,23 @@
       docker_compose:
         project_name: microblog
         project_src: /home/ubuntu/microblog/
-      register: output
+        
+    - name: Run unittest
+      shell: echo "Start test"
+
+    - name: Login into Docker hub
+      docker_login:
+          username: {{ docker_user }}
+          password: {{ docker_token }} 
+    
+    - name: Tag and push to docker hub
+      docker_image:
+        name: microblog:latest
+        repository: andriibondar/microblog:latest
+        push: yes
+        source: local
+        force_tag: yes
+      
+    - name: Log out of DockerHub
+      docker_login:
+        state: absent

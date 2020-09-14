@@ -37,7 +37,7 @@ pipeline {
             steps {
 							script {
 								FAILED_STAGE=env.STAGE_NAME
-								sh 'cd microblog/pytest && python test_backend.py && cd -'
+								sh 'cd microblog/pytest && python test_UI.py && cd -'
 
 
 		          }
