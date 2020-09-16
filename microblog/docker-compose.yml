@@ -13,7 +13,7 @@ services:
   microblog:
     depends_on:
       - db
-    image: microblog
+    image: microblog:latest
     ports:
       - "80:5000"
     restart: always
