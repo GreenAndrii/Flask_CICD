@@ -13,8 +13,8 @@ RUN python -m venv venv \
 
 COPY app app
 COPY migrations migrations
-COPY microblog.py config.py boot.sh tests.py ./
-RUN chmod +x boot.sh
+COPY microblog.py config.py boot.sh tests.py tests.sh ./
+RUN chmod +x boot.sh tests.sh
 
 ENV FLASK_APP microblog.py
 
