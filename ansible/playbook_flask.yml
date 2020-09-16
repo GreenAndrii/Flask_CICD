@@ -94,7 +94,14 @@
         project_src: /home/ubuntu/microblog/
         
     - name: Run unittest
-      shell: echo "Start test"
+      shell: |
+          echo "Start test"
+          docker exec -it microblog_microblog_1 bash
+          source venv/bin/activate
+          python3 test.py
+          deactivate
+          exit
+         
 
     - name: Login into Docker hub
       docker_login:

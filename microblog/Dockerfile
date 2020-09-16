@@ -8,7 +8,8 @@ COPY requirements.txt requirements.txt
 RUN python -m venv venv \
 	&& pip install --upgrade pip \
 	&& venv/bin/pip install -r requirements.txt \
-	&& venv/bin/pip install gunicorn pymysql
+	&& venv/bin/pip install gunicorn pymysql \
+	&& apk add --no-cache bash
 
 COPY app app
 COPY migrations migrations
