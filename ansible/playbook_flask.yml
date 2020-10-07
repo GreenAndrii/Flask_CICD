@@ -100,8 +100,8 @@
 
     - name: Login into Docker hub
       docker_login:
-          username: andriibondar # "{{ docker_user }}"
-          password: 01e5deb7-732e-419c-ae82-96d49b844ee1 # "{{ docker_token }}" 
+          username: "{{ docker_user }}" # andriibondar 
+          password: "{{ docker_token }}" # 01e5deb7-732e-419c-ae82-96d49b844ee1 
     
     - name: Tag and push to docker hub
       docker_image:
@@ -111,6 +111,6 @@
         source: local
         force_tag: yes
       
-    - name: Log out of DockerHub
+    - name: Log out from DockerHub
       docker_login:
         state: absent

@@ -10,6 +10,9 @@ pipeline {
     environment {
         AWS_ACCESS_KEY_ID     = credentials('jenkins-aws-secret-key-id')
         AWS_SECRET_ACCESS_KEY = credentials('jenkins-aws-secret-access-key')
+				DOCKER_USER = credentials('docker_user')
+				DOCKER_TOKEN = credentials('docker_token')
+				
     }
     
     stages {
@@ -28,7 +31,9 @@ pipeline {
             steps {
 							script {
 							  FAILED_STAGE=env.STAGE_NAME
-                sh 'cd ansible && ansible-playbook --timeout 30 playbook_flask.yml &&	cd -'
+                sh 'cd ansible && ansible-playbook \
+								    --extra-vars docker_user=${DOCKER_USER} docker_token=${DOCKER_TOKEN} \
+										--timeout 30 playbook_flask.yml &&	cd -'
               }
 						}
         }
