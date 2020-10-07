@@ -32,7 +32,7 @@ pipeline {
 							script {
 							  FAILED_STAGE=env.STAGE_NAME
                 sh 'cd ansible && ansible-playbook \
-								    --extra-vars docker_user=${DOCKER_USER} docker_token=${DOCKER_TOKEN} \
+								    -e docker_user=${DOCKER_USER} -e docker_token=${DOCKER_TOKEN} \
 										--timeout 30 playbook_flask.yml &&	cd -'
               }
 						}
