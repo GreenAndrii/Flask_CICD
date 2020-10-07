@@ -71,8 +71,8 @@ pipeline {
       }
 
       always {
-/*        sh 'cd terraform/dev && terraform destroy -auto-approve && cd -'  
-        cleanWs() */
+/*        sh 'cd terraform/dev && terraform destroy -auto-approve && cd -'  */
+/*        cleanWs() */
       }
 
     }
