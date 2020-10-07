@@ -70,10 +70,10 @@ pipeline {
         telegramSend "FAILURE: $JOB_NAME - Build # $BUILD_NUMBER Stage: ${FAILED_STAGE}"
       }
 
-      always {
-/*        sh 'cd terraform/dev && terraform destroy -auto-approve && cd -'  */
-/*        cleanWs() */
+/*      always {
+        sh 'cd terraform/dev && terraform destroy -auto-approve && cd -'
+        cleanWs() 
       }
-
+*/
     }
 }
