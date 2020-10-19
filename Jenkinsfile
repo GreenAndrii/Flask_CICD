@@ -22,7 +22,6 @@ pipeline {
               script {
                 FAILED_STAGE=env.STAGE_NAME
                 sh 'cd terraform/dev && terraform init && terraform apply -input=false -auto-approve && cd -'
-                sh 'sleep 30'
               }
             }
         }
@@ -33,7 +32,7 @@ pipeline {
                 FAILED_STAGE=env.STAGE_NAME
                 sh 'cd ansible && ansible-playbook \
                     -e docker_user=${DOCKER_USER} -e docker_token=${DOCKER_TOKEN} \
-                    --timeout 30 playbook_flask.yml &&	cd -'
+                    playbook_flask.yml &&	cd -'
               }
             }
         }
@@ -70,10 +69,10 @@ pipeline {
         telegramSend "FAILURE: $JOB_NAME - Build # $BUILD_NUMBER Stage: ${FAILED_STAGE}"
       }
 
-/*      always {
+      always {
         sh 'cd terraform/dev && terraform destroy -auto-approve && cd -'
         cleanWs() 
       }
-*/
+
     }
 }

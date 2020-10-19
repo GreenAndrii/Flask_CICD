@@ -6,6 +6,12 @@
     RANDOM_DB_PASSWD:
 
   tasks:
+    - name: Wait until EC2 initiliaze
+      wait_for:
+        host: "{{ ansible_facts['hostname'] }}"
+        port: 22
+        delay: 10
+      
     - name: Generate DB password
       set_fact:
         RANDOM_DB_PASSWD: "{{ lookup('password', '/dev/null length=15 chars=ascii_letters') }}"
