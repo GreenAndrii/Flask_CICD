@@ -22,6 +22,7 @@ pipeline {
               script {
                 FAILED_STAGE=env.STAGE_NAME
                 sh 'cd terraform/dev && terraform init && terraform apply -input=false -auto-approve && cd -'
+                sh 'sleep 30'
               }
             }
         }
@@ -32,7 +33,7 @@ pipeline {
                 FAILED_STAGE=env.STAGE_NAME
                 sh 'cd ansible && ansible-playbook \
                     -e docker_user=${DOCKER_USER} -e docker_token=${DOCKER_TOKEN} \
-                    playbook_flask.yml &&	cd -'
+                    --timeout 30 playbook_flask.yml &&	cd -'
               }
             }
         }
