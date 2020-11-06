@@ -11,6 +11,7 @@
         host: "{{ ansible_facts['hostname'] }}"
         port: 22
         delay: 10
+      delegate_to: 127.0.0.1
       
     - name: Generate DB password
       set_fact:
@@ -106,8 +107,8 @@
 
     - name: Login into Docker hub
       docker_login:
-          username: "{{ docker_user }}" # andriibondar 
-          password: "{{ docker_token }}" # 01e5deb7-732e-419c-ae82-96d49b844ee1 
+          username: "{{ docker_user }}" 
+          password: "{{ docker_token }}"  
     
     - name: Tag and push to docker hub
       docker_image:
